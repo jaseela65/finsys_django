@@ -1,0 +1,676 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+<style>
+     @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+background: #f2f2f2;
+font-family: 'Open Sans', sans-serif;
+}
+
+.search {
+width: 100%;
+position: relative;
+display: flex;
+}
+
+.searchTerm {
+width: 100%;
+border: 3px solid #7690da;
+border-right: none;
+padding: 5px;
+height: 36px;
+border-radius: 5px 0 0 5px;
+outline: none;
+color: #9DBFAF;
+
+}
+
+.searchTerm:focus{
+color:#7690da;
+}
+
+.searchButton {
+width: 40px;
+height: 36px;
+border: 1px solid #7690da;
+background:#7690da;
+text-align: center;
+color: #fff;
+border-radius: 0 5px 5px 0;
+cursor: pointer;
+font-size: 20px;
+}
+
+.table-row{
+        cursor:pointer;
+}
+/* .table-row:hover{
+    background-color: rgb(217, 232, 51);
+} */
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+width: 40%;
+/* position: absolute;
+top: 50%;
+left: 50%; */
+/* transform: translate(-50%, -50%); */
+}
+</style>
+    <div class="page-content">
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center><h3 class="mb-0">GENERATE e-WAY BILL</h3></center>
+                </div>
+                <hr/>
+            </div>
+        </div>
+        <div class="card radius-15" style="background-color: #243e54;">
+            <div class="card-body">
+                <!--<div class="card-title">
+                    <h4 class="mb-0">PART A</h4>
+                </div>
+                <hr/>-->
+                <form action="{% url 'create_eway_inv' %}" method="post" class="needs-validation" novalidate autocomplete="off">
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <label for="validationCustom01">Document Type</label>
+                            <select name="d_type" id="title" class="form-control">
+                                <option value="Supply">Invoices</option>
+                                <option value="Import">Credit Notes</option>
+                                <option value="Export">Delivery Challans</option>
+                                </select>
+                        </div>
+                       
+                    </div>
+                        <div class="row">
+                            <div class="col-md-4 mt-3">
+                                <label for="validationCustom01">Transaction Sub Type </label>
+                                <select name="s_type" id="title" class="form-control">
+                                    <option value="Supply">Supply</option>
+                                    <option value="Import">Import</option>
+                                    <option value="Export">Export</option>
+                                    <option value="Job Work">Job Work</option>
+                                    <option value="For Own Use">For Own Use</option>
+                                    <option value="Job Work Returns">Job Work Returns</option>
+                                    <option value="Sales Returns">Sales Returns </option>
+                                    <option value="Others">Others</option>
+                                    <option value="SKD/CKD">SKD/CKD</option>
+                                    <option value="Line Sales">Line Sales</option>
+                                    <option value="Recipient Not Known">Recipient Not Known</option>
+                                    <option value="Exhibition or Faris">Exhibition or Faris</option>
+                                </select>
+                            </div>
+                           
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mt-3 ">
+                                <label for="validationCustom03">Customer Name</label>
+                                <div class="d-flex">
+                                <select name="transporter" id="title" class="form-control">
+                                   
+
+                                    <option selected disabled>Select customer name </option>
+                                    {% for i in cs %}
+                                    <option value="{{ i.firstname  }}">{{ i.firstname  }} </option>
+                                    {% endfor %}
+
+                                </select>
+                                <a href="#">
+                                    <button type="button" class="btn btn-outline-secondary ml-1" 
+                                    data-target="#newtransporter" data-toggle="modal">+</button>
+                                </a></div></div>
+                                <div class="col-md-3 mt-3">
+                                <label for="validationCustom03">Mail id</label>
+                                <input type="text" class="form-control" name="mailid"
+                                ></div>
+                                <div class="col-md-3 mt-3">
+                                <label for="validationCustom03">GSTIN</label>
+                                <input type="text" class="form-control" name="gstin"
+                                ></div>
+                            
+                        </div>
+                           
+                        
+                        <div class="row">
+                            <div class="col-md-4 mt-3">
+                                <label for="validationCustom03">Invoice
+
+                                </label>
+                                <input type="text" class="form-control" placeholder="INV-0000" id="validationCustom03" name="dist"
+                                    >
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label for="validationCustom03">Date
+
+                                </label>
+                                <input type="date" class="form-control" id="validationCustom03" name="dist"
+                                    >
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mt-3">
+                                <label for="validationCustom03">Transaction Type
+
+                                </label>
+                                <input type="text" class="form-control" id="validationCustom03" name="dist"
+                                    >
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>Address Details</h4>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4 mt-3">
+                                <label for="validationCustom01">Place of Suply</label>
+                                <select name="tmode" id="title" class="form-control">
+                                    <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option> <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
+                      <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> <option value="volvo">[AS]-Assam</option>
+                      <option value="[BR]-Bihar">[BR]-Bihar</option> <option value="volvo">[CH]-	Chandhigarh</option><option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
+                      <option value="[DD]-Daman Diu">[DD]-Daman Diu</option><option value="volvo">[DL]-	Delhi</option><option value="[GA]-Goa">[GA]-Goa</option> <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+                      <option value="[HR]-Haryana">[HR]-Haryana</option> <option value="[HP]-Himachal Pradesh">[HP]-Himachal Pradesh</option>
+                      <option value="[JK]-Jammu And Kashmir">[JK]-Jammu And Kashmir</option><option value="[JH]-Jharkand">[JH]-Jharkand</option>
+                      <option value="[KA]-Karnataka">[KA]-Karnataka</option><option value="[KL]-Kerala">[KL]-Kerala</option>
+                      <option value="[LA]-Ladakh">[LA]-Ladakh</option><option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+                      <option value="[MP]-Madhyapradesh">[MP]-Madhyapradesh</option><option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+                      <option value="[MN]-Manipur">[MN]-Manipur</option>  <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+                    <option value="[MZ]-Mizoram">[MZ]-Mizoram</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+                     <option value="[OD]-Odisha">[OD]-Odisha</option><option value="[PY]-Puducherry">[PY]-Puducherry</option>
+                      <option value="[PB]-Punjab">[PB]-Punjab.</option><option value="[RL]-Rajasthan">[RL]-Rajasthan</option>
+                      <option value="[SK]-Sikkim">[SK]-Sikkim</option><option value="[TN]-Tamilnadu">[TN]-Tamilnadu</option>
+                      <option value="[TS]-Telenghana">[TS]-Telenghana</option><option value="[TR]-Tripura">[TR]-Tripura</option><option value="[UP]-Uttar Pradesh">[UP]-Uttar Pradesh</option>
+                      <option value="[UK]-Utharakhand">[UK]-Utharakhand</option><option value="[WB]-West Bengal">[WB]-West Bengal</option>
+                      <option value="[OT]-Other Territory">[OT]-Other Territory</option>
+                                </select>
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mt-3">
+                                <label for="validationCustom01">Mode of Transportation</label>
+                                <div class="d-flex">
+                                <select name="tmode" id="title" class="form-control">
+                                    <option value="Road">Road</option>
+                                    <option value="Rail">Rail</option>
+                                    <option value="Ship">Ship</option>
+                                    <option value="Air">Air</option>
+                                    <option value="Air">Car</option><option value="Air">Bus</option>
+                                </select>
+                                <a href="#">
+                                    <button type="button" class="btn btn-outline-secondary ml-1" 
+                                    data-target="#newtransporter" data-toggle="modal">+</button>
+                                </a>
+                            </div>
+                           
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label for="validationCustom03">Distance (Km)</label>
+                            <input type="text" class="form-control" id="validationCustom03" name="km"
+                                >
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label for="validationCustom03">Vehicle No</label>
+                            <input type="text" class="form-control" id="validationCustom03" name="vno"
+                                >
+                        </div></div>
+                        <!--<div class="row">
+                            <div class="col-md-6 mt-3">
+                               
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mt-3">
+                                <label for="validationCustom05" name style="color: white;">Vehicle Type
+                                    </label>
+                             
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Regular" type="radio" name="vtype" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                      Regular
+                                    </label>
+                                  </div>
+                                 
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" value="Cargo" type="radio" name="vtype" id="flexRadioDefault2" >
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                  Over Dimentional Cargo
+                                </label>
+                              </div>
+                        </div>
+                    -->
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <label for="validationCustom03">Delivery Date</label>
+                            <input type="date" class="form-control" id="validationCustom03" name="vno"
+                                >
+                        </div>
+                       
+                    </div><!--
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <label for="validationCustom03">Transporter's Doc No</label>
+                            <input type="text" class="form-control" id="validationCustom03" name="tdoc_no"
+                                >
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mt-3">
+                            <label for="validationCustom03">Transporter's Doc Date</label>
+                            <input type="date" class="form-control" id="validationCustom03" name="tdoc_date"
+                                >
+                        </div>
+                       
+                    </div>
+                </div>-->
+                       
+                <hr>
+                <h4>Items Details</h4>
+                <hr>
+
+                
+                <div class="row clearfix">
+                    <div class="col-md-12 table-responsive-md mt-3">
+                        <table class="table table-bordered table-hover mt-3" id="tab_logic">
+                            <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center" >ITEMS</th>
+                                <th class="text-center">HSN</th>
+                                <th class="text-center">QTY</th>
+                                <th class="text-center">PRICE</th>
+                                <th class="text-center">TAX (%)</th>
+                                <th class="text-center">DISCOUNT</th>
+                                <th class="text-center">TOTAL</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-table-body">
+                            <tr id='addr01'>
+                                <td class="nnum">1</td>
+                                <td style="width: 20%;">
+
+                                    <div class="d-flex">
+                                        <select name='product[]' id="product1" class="form-control product" style="background-color: #2f516f; color: white; ">
+                                            <option value=" " selected>Select Item</option>
+                                
+                                            {% for i in itm %}
+                                                {% if i.cid_id == cmp1.cid %}
+                                                <option  value="{{ i.name  }}">{{ i.name  }} </option>
+                                                {% endif %}
+                                            {% endfor %}
+        
+                                        </select>
+
+                                        <a href="#">
+                                            <button type="button" class="btn btn-outline-secondary ml-1" data-target="#newitem" data-toggle="modal">+</button>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td><input type="text" name='hsn[]' id="hsn1" placeholder='Enter HSN ' class="form-control" style="background-color: #2f516f; color: white;" /></td>
+                                <td><input type="number" name='qty[]'  placeholder='Enter Qty' id="qty1"  class="form-control qty" step=0 min=0 style="background-color: #2f516f;margin-top: 21px; color: white;" />
+                                    <div class="d-flex"><span>Available Qty :</span> <span id="qtyspan1" class=''></span></div>
+                                </td>
+                                <td><input type="number" name='price[]' id="unit1" placeholder='Enter Unit Price' class="form-control price" step="0.00" min="0" style="background-color: #2f516f; color: white;" /></td>
+                                <td>
+                                    <input hidden value="{{cmp1.state}}" id="cmpstate">
+                                    <input type="text"  id="select_tax" placeholder="Tax Rate" class="form-control seltax d-flex">
+                                    <select name='tax1[]' id="tax11" class="form-control tax intra_tax d-none">
+                                        <option selected disabled >Select GST</option>
+                                        <option value=28 >28.0% GST(28%)</option>
+                                        <option value=18 >18.0% GST(18%)</option>
+                                        <option value=12  >12.0% GST(12%)</option>
+                                            <option value=5  >05.0% GST(05%)</option>
+                                        <option value=3  >03.0% GST(03%)</option>
+                                            <option value=0  >0.0% GST(0%)</option>
+                                    </select>
+                                    <select name='tax2[]' id="tax21" class="form-control tax inter_tax d-none">
+                                        <option selected disabled >Select IGST</option>
+                                        <option value=28 >28.0% IGST(28%)</option>
+                                        <option value=18 >18.0% IGST(18%)</option>
+                                        <option value=12  >12.0% IGST(12%)</option>
+                                            <option value=5  >05.0% IGST(05%)</option>
+                                        <option value=3  >03.0% IGST(03%)</option>
+                                            <option value=0  >0.0% IGST(0%)</option>
+                                    </select>
+                                          
+                                </td>
+                                <td><input type="number" name='discount[]'  placeholder='Enter Discount' id="disc1" value=0 class="form-control disc" step=0 min=0 style="background-color: #2f516f;  color: white;"  /></td>
+
+                                <td><input type="number" name='total[]' id="total1" placeholder=0 class="form-control total" value=0 step="any" readonly style="background-color: #2f516f; color: white;" /></td>
+                                <td style="display: none;"><input type="number" step="any" name='taxamount1' id="taxamount1" class="form-control taxamount"/></td>
+
+                                <td>
+                                    <button type="button" id="1" class="btn  font-weight-bold clone_row fas fa-clone px-2 my-1 py-1" title="Clone Row" style="background-color:rgb(88, 107, 143);"></button><br>
+                                    <button type="button" id="1" class="btn btn-danger remove_row px-2 py-1 mx-1 fas fa-close" title="Remove Row"> </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tr>
+                                <td style="border: none;"><a class="btn btn-outline-secondary ml-1" role="button" id="add">+</a></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row clearfix" style="margin-top:20px">
+                    <div class="col-md-6">
+                        <textarea class="form-control"  id="" name="Note" placeholder="Note" style="height: 190px;"></textarea>
+                        <input type="file" name="file"  style="margin-top: 10px; width: 70%;">
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 table-responsive-md mt-3" id="tab_logic_total" style="background-color:rgba(0,0,0,.4); border: 1px solid rgba(128, 128, 128, 0.6);">
+                        <div class="p-3">
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label class="text-center">Sub Total</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" step="any" name='subtotal' placeholder=0 
+                                    class="form-control" id="sub_total">
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" id="igst1">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">IGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="cgst1">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">CGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="sgst1">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">SGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Tax Amount</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" step="any" name='taxamount' id="tax_amount" placeholder='0.00' 
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+
+                            </div>
+                      
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Shipping Charge</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" step="any" name='ship' id="ship" placeholder='0.00'  value=0
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Adjustment</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" step="any" name='adj' id="adj" placeholder='0.00' 
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Grand Total</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='grandtotal' id="grandtotal" placeholder='0.00' readonly
+                                    class="form-control"/>
+                                </div>
+                                <div class="col-sm-4 m-0 p-0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 mt-3"></div>
+                    <div class="col-md-2 mt-3">
+                    <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left">
+                        Save To Draft
+                    </button>
+                    </div>
+                </div>
+
+
+
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-info rounded-pill text-grey w-100 mt-3 mb-3"
+                                        type="submit">
+                                    Submit form
+                                </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    
+<!---------------------------------------------ADD Transporter MODAL ----------------------------------------------->
+
+<div class="modal fade" id="newtransporter">
+    <div class="modal-dialog">
+   
+        <div class="modal-content" style="background-color: #213b52;">
+            <form action="{% url 'create_transporter' %}" method="post" class="needs-validation"  validate>
+                {% csrf_token %}
+            <div class="modal-header">
+                <h3 class="m-3">Add Transporter</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              
+              
+                <div>
+                    <div class="form-check">
+                        <label class="form-check-label">Name *</label> 
+                        <input type="text" class="form-control" name="tname">
+                       
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label">Transporter's ID *</label> 
+                        <input type="text" class="form-control" name="tid">
+                       
+                    </div>
+
+    
+                </div>
+           
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-info" >Save</button>
+                <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+            </div>
+        </form>
+        </div>
+ 
+    </div>
+</div>            
+
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function poppins() {
+            var chkbtn = document.getElementById('okay');
+            if (chkbtn.checked == true) {
+                document.getElementById('shipstreet').value = document.getElementById('street').value;
+                document.getElementById('shipcity').value = document.getElementById('city').value;
+                document.getElementById('shippinco').value = document.getElementById('pinco').value;
+                document.getElementById('shipcountry').value = document.getElementById('country').value;
+                document.getElementById('shipst').value = document.getElementById('state').value;
+                document.getElementById('shipst').innerHTML = document.getElementById('state').value;
+            } else {
+                document.getElementById('shipstreet').value = '';
+                document.getElementById('shipcity').value = '';
+                document.getElementById('shipstate').value = '';
+                document.getElementById('shippinco').value = '';
+                document.getElementById('shipcountry').value = '';
+            }
+        }
+    </script>
+
+    <script>
+        function showgsttyp(){
+            var status = document.getElementById("gsttyp");
+            var a = status.value
+            console.log(a);
+            if( a == "Registered Business - Regular" ){
+                console.log(a);
+
+                document.getElementById('regular').style.display = "flex";
+                // document.getElementById('trade').style.display = "block";
+                // document.getElementById('legal').style.display = "block";
+                // document.getElementById('tax').style.display = "block";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "Registered Business - Composition" ){
+                document.getElementById('comp').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "unregistered Business" ){
+                document.getElementById('unreg').style.display = "flex";
+                // document.getElementById('tax').style.display = "block";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "Overseas" ){
+                document.getElementById('overseas').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "Special Economic Zone (SEZ)" ){
+                document.getElementById('sez').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "Demed Exports" ){
+                document.getElementById('demed').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "Tax Deductor" ){
+                document.getElementById('taxdud').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('sezdev').style.display = "none";
+            }
+            else if( a == "SEZ Developer" ){
+                document.getElementById('sezdev').style.display = "flex";
+                document.getElementById('tax').style.display = "none";
+                document.getElementById('trade').style.display = "none";
+                document.getElementById('legal').style.display = "none";
+                document.getElementById('demed').style.display = "none";
+                document.getElementById('sez').style.display = "none";
+                document.getElementById('unreg').style.display = "none";
+                document.getElementById('comp').style.display = "none";
+                document.getElementById('regular').style.display = "none";
+                document.getElementById('overseas').style.display = "none";
+                document.getElementById('taxdud').style.display = "none";
+            }
+        }
+
+    </script>
+
+    <script>
+        function hidinput(divId, element) {
+            if (element.value == 'unregistered Business' || element.value == 'Consumer' || element.value == 'Overseas') {
+                document.getElementById(divId).style.display = 'none';
+            } else {
+                document.getElementById(divId).style.display = 'block';
+            }
+        }
+
+        function checkgst(element) {
+            var gstinput = element.value;
+            var gstregexp = "[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9a-zA-Z]{1}";
+            if (gstinput.match(gstregexp)) {
+                document.getElementById('warngst').innerHTML = '';
+            } else {
+                document.getElementById('warngst').innerHTML = 'Please provide a valid GSTIN';
+                alert('Please provide a valid GSTIN');
+            }
+        }
+    </script>
+
+{% endblock %}
